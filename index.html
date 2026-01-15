@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bible Memory</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Bible Memory">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      text-align: center;
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .card {
+      background: white;
+      padding: 30px 24px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      margin-bottom: 20px;
+    }
+    .ref {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      color: #333;
+    }
+    .verse {
+      display: none;
+      font-size: 18px;
+      line-height: 1.8;
+      color: #555;
+      margin-bottom: 24px;
+      min-height: 80px;
+      animation: fadeIn 0.3s ease-in;
+    }
+    .verse.show {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .button-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .button-row {
+      display: flex;
+      gap: 12px;
+    }
+    button {
+      flex: 1;
+      padding: 14px 20px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .btn-primary {
+      background: #007aff;
+      color: white;
+    }
+    .btn-primary:active {
+      transform: scale(0.98);
+      opacity: 0.9;
+    }
+    .btn-secondary {
+      background: #34c759;
+      color: white;
+    }
+    .btn-secondary:active {
+      transform: scale(0.98);
+      opacity: 0.9;
+    }
+    .btn-danger {
+      background: #ff3b30;
+      color: white;
+    }
+    .btn-danger:active {
+      transform: scale(0.98);
+      opacity: 0.9;
+    }
+    .typing-section {
+      display: none;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid #e0e0e0;
+    }
+    .typing-section.show {
+      display: block;
+    }
+    #verseInput {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .result {
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 12px;
+      display: none;
+      font-weight: 600;
+    }
+    .result.show {
+      display: block;
+    }
+    .result.correct {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .result.incorrect {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    .info {
+      font-size: 12px;
+      color: #999;
+      margin-top: 16px;
+    }
+    .progress {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="card">
+    <div class="progress" id="progress"></div>
+    <div id="reference" class="ref"></div>
+    <div id="verse" class="verse"></div>
+    
+    <div class="button-group">
+      <button class="btn-primary" onclick="revealVerse()">Reveal Verse</button>
+      
+      <div class="button-row">
+        <button class="btn-secondary" onclick="nextVerse()">Next Verse</button>
+        <button class="btn-danger" onclick="hideVerse()">Hide</button>
+      </div>
+      
+      <button class="btn-primary" onclick="toggleTypingMode()">Type & Check</button>
+    </div>
+
+    <div class="typing-section" id="typingSection">
+      <p style="color: #666; margin-bottom: 12px; font-size: 14px;">Type the verse from memory:</p>
+      <textarea id="verseInput" placeholder="Type the verse here..." rows="4"></textarea>
+      <button class="btn-secondary" onclick="checkTyping()">Check Answer</button>
+      <div class="result" id="result"></div>
+    </div>
+
+    <div class="info" id="info"></div>
+  </div>
+</div>
+
+<script>
+  const verses = [
+    {
+      ref: "John 15:10",
+      text: "If you keep my commandments, you will abide in my love, just as I have kept my Father's commandments and abide in His love."
+    },
+    {
+      ref: "Luke 9:23",
+      text: "And He said to all, 'if anyone would come after me, let him deny himself and take up his cross daily and follow me.'"
+    },
+    {
+      ref: "Philippians 2:13",
+      text: "For it is God who works in you, both to will and to work for his good pleasure."
+    },
+    {
+      ref: "John 14:26",
+      text: "But the Helper, the Holy Spirit, whom the Father will send in my name, he will teach you all things and bring to your remembrance all that I have said to you."
+    },
+    {
+      ref: "Matthew 22:37-39",
+      text: "And he said to him, 'You shall love the Lord your God with all your heart and with all your soul and with all your mind.' This is the great and first commandment. And a second is like it: 'You shall love your neighbor as yourself.'"
+    },
+    {
+      ref: "Romans 12:2",
+      text: "Do not be conformed to this world, but be transformed by the renewal of your mind, that by testing you may discern what is the will of God, what is good and acceptable and perfect."
+    },
+    {
+      ref: "Romans 3:23-24",
+      text: "For all have sinned and fall short of the glory of God, and are justified by his grace as a gift, through the redemption that is in Christ Jesus."
+    },
+    {
+      ref: "2 Corinthians 5:17",
+      text: "Therefore, if anyone is in Christ, he is a new creation. The old has passed away; behold, the new has come."
+    },
+    {
+      ref: "Acts 3:19",
+      text: "Repent therefore, and turn back, that your sins may be blotted out, that times of refreshing may come from the presence of the Lord."
+    }
+  ];
+
+  let currentVerseIndex = 0;
+  let verseRevealed = false;
+  let todayKey = getTodayKey();
+
+  function getTodayKey() {
+    const today = new Date();
+    return `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
+  }
+
+  function initializeVerse() {
+    const lastKey = localStorage.getItem("lastVerseDateKey");
+    
+    // Daily rotation: show new verse each day
+    if (lastKey !== todayKey) {
+      const randomIndex = Math.floor(Math.random() * verses.length);
+      localStorage.setItem("currentVerseIndex", randomIndex);
+      localStorage.setItem("lastVerseDateKey", todayKey);
+      currentVerseIndex = randomIndex;
+    } else {
+      // Load today's verse
+      currentVerseIndex = parseInt(localStorage.getItem("currentVerseIndex")) || 0;
+    }
+    
+    displayVerse();
+    verseRevealed = false;
+    updateProgress();
+  }
+
+  function displayVerse() {
+    const verse = verses[currentVerseIndex];
+    document.getElementById("reference").innerText = verse.ref;
+    document.getElementById("verse").innerText = verse.text;
+    
+    // Reset UI
+    document.getElementById("verse").classList.remove("show");
+    verseRevealed = false;
+    document.getElementById("verseInput").value = "";
+    document.getElementById("result").classList.remove("show", "correct", "incorrect");
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const progress = `Verse ${currentVerseIndex + 1} of ${verses.length}`;
+    document.getElementById("progress").innerText = progress;
+  }
+
+  function revealVerse() {
+    document.getElementById("verse").classList.add("show");
+    verseRevealed = true;
+  }
+
+  function hideVerse() {
+    document.getElementById("verse").classList.remove("show");
+    verseRevealed = false;
+  }
+
+  function nextVerse() {
+    currentVerseIndex = (currentVerseIndex + 1) % verses.length;
+    displayVerse();
+  }
+
+  function toggleTypingMode() {
+    const section = document.getElementById("typingSection");
+    section.classList.toggle("show");
+  }
+
+  function checkTyping() {
+    const userInput = document.getElementById("verseInput").value.trim();
+    const actualVerse = verses[currentVerseIndex].text.toLowerCase();
+    const userVerseLower = userInput.toLowerCase();
+    
+    const result = document.getElementById("result");
+    
+    if (!userInput) {
+      result.innerText = "Please type something first!";
+      result.classList.add("show", "incorrect");
+      return;
+    }
+
+    // Calculate similarity (simple check for most words matching)
+    const actualWords = actualVerse.split(/\s+/);
+    const userWords = userVerseLower.split(/\s+/);
+    
+    let matchCount = 0;
+    userWords.forEach(word => {
+      if (actualWords.includes(word)) {
+        matchCount++;
+      }
+    });
+    
+    const matchPercentage = (matchCount / actualWords.length) * 100;
+    
+    if (matchPercentage >= 85) {
+      result.innerText = "✓ Excellent! You got it right!";
+      result.classList.add("show", "correct");
+      result.classList.remove("incorrect");
+    } else if (matchPercentage >= 60) {
+      result.innerText = `Close! ${Math.round(matchPercentage)}% match. Try again!`;
+      result.classList.add("show", "incorrect");
+      result.classList.remove("correct");
+    } else {
+      result.innerText = `Keep practicing! ${Math.round(matchPercentage)}% match.`;
+      result.classList.add("show", "incorrect");
+      result.classList.remove("correct");
+    }
+  }
+
+  // Initialize on page load
+  initializeVerse();
+  
+  // Info text
+  document.getElementById("info").innerText = "💡 Tip: Same verse every day. New verse each day!";
+</script>
+
+</body>
+</html>
