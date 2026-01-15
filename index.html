@@ -175,25 +175,246 @@
       margin-bottom: 12px;
       font-weight: 500;
     }
+    .stats-container {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .stat-box {
+      background: #f5f5f5;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #333;
+    }
+    .stat-box.streak {
+      background: #fff3cd;
+      color: #856404;
+    }
+    .timer {
+      font-size: 12px;
+      color: #999;
+      margin-top: 8px;
+    }
+    .controls {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .control-btn {
+      padding: 8px 12px;
+      font-size: 12px;
+      background: #f0f0f0;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .control-btn:active {
+      background: #e0e0e0;
+    }
+    .control-btn.active {
+      background: #007aff;
+      color: white;
+      border-color: #007aff;
+    }
+    .share-btn {
+      background: #5ac8fa;
+      color: white;
+      padding: 6px 12px;
+      font-size: 12px;
+      text-transform: none;
+      flex: 0 0 auto;
+      min-width: 50px;
+    }
+    body.dark-mode {
+      background: #1a1a1a;
+    }
+    body.dark-mode .card {
+      background: #2d2d2d;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+    body.dark-mode .ref,
+    body.dark-mode .verse,
+    body.dark-mode .progress,
+    body.dark-mode .stat-box {
+      color: #e0e0e0;
+    }
+    body.dark-mode .stat-box {
+      background: #3d3d3d;
+    }
+    body.dark-mode #verseInput {
+      background: #3d3d3d;
+      color: #e0e0e0;
+      border-color: #555;
+    }
+    body.dark-mode .control-btn {
+      background: #3d3d3d;
+      color: #e0e0e0;
+      border-color: #555;
+    }
+    .kbd {
+      font-size: 11px;
+      color: white;
+      display: block;
+      margin-top: 4px;
+    }
+    .login-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .login-screen.hidden {
+      display: none;
+    }
+    .login-box {
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+    }
+    .login-box h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+      color: #333;
+    }
+    .login-box p {
+      color: #666;
+      margin-bottom: 30px;
+    }
+    #usernameInput {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      background: #007aff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .login-btn:active {
+      opacity: 0.9;
+    }
+    .login-btn.tyrone {
+      background: #34c759;
+    }
+    .login-btn.kashieca {
+      background: #ff6b9d;
+    }
+    .user-info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: #f0f0f0;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      font-size: 13px;
+    }
+    .user-info .username {
+      font-weight: 600;
+      color: #007aff;
+    }
+    .logout-btn {
+      padding: 4px 10px;
+      font-size: 11px;
+      background: #ff3b30;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    body.dark-mode .login-screen {
+      background: #1a1a1a;
+    }
+    body.dark-mode .login-box {
+      background: #2d2d2d;
+    }
+    body.dark-mode .login-box h1,
+    body.dark-mode .login-box p {
+      color: #e0e0e0;
+    }
+    body.dark-mode #usernameInput {
+      background: #3d3d3d;
+      color: #e0e0e0;
+      border-color: #555;
+    }
+    body.dark-mode .user-info {
+      background: #3d3d3d;
+      color: #e0e0e0;
+    }
   </style>
 </head>
 <body>
 
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <h1>📖 Bible Memory</h1>
+    <p>Select your profile</p>
+    <button class="login-btn tyrone" onclick="selectUser('Tyrone')" style="margin-bottom: 12px;">Tyrone</button>
+    <button class="login-btn kashieca" onclick="selectUser('Kashieca')">Kashieca</button>
+  </div>
+</div>
+
 <div class="container">
   <div class="card">
+    <div class="user-info">
+      <span>👤 <span class="username" id="currentUser"></span></span>
+      <button class="logout-btn" onclick="logout()">Switch User</button>
+    </div>
+
+    <div class="stats-container">
+      <div class="stat-box streak" id="streakBox">🔥 0 day streak</div>
+      <div class="stat-box" id="masteredBox">✓ Mastered: 0/9</div>
+      <div class="stat-box" id="practiceBox">📝 To Practice: 9/9</div>
+    </div>
+
+    <div class="controls">
+      <button class="control-btn" onclick="toggleDarkMode()" title="Toggle dark mode">🌙 Dark</button>
+      <button class="control-btn" onclick="toggleRandomMode()" id="randomBtn" title="Random verse order">🔀 Random</button>
+      <button class="control-btn" onclick="resetStats()" title="Reset all progress">↻ Reset</button>
+    </div>
+
     <div class="progress" id="progress"></div>
     <div id="reference" class="ref"></div>
     <div id="verse" class="verse"></div>
+    <div class="timer" id="timer"></div>
     
     <div class="button-group">
-      <button class="btn-primary" onclick="revealVerse()">Reveal Verse</button>
+      <button class="btn-primary" onclick="revealVerse()">Reveal Verse <span class="kbd">(R)</span></button>
       
       <div class="button-row">
-        <button class="btn-secondary" onclick="nextVerse()">Next Verse</button>
+        <button class="btn-secondary" onclick="nextVerse()">Next Verse <span class="kbd">(N)</span></button>
         <button class="btn-danger" onclick="hideVerse()">Hide</button>
+        <button class="share-btn" onclick="shareVerse()" title="Copy to clipboard">Share</button>
       </div>
       
-      <button class="btn-primary" onclick="toggleTypingMode()">Type & Check</button>
+      <button class="btn-primary" onclick="toggleTypingMode()">Type & Check <span class="kbd">(T)</span></button>
     </div>
 
     <div class="typing-section" id="typingSection">
@@ -216,110 +437,269 @@
     {
       ref: "John 15:10",
       text: "If you keep my commandments, you will abide in my love, just as I have kept my Father's commandments and abide in His love.",
-      hint: "💡 Think about obedience and love..."
+      hint: "💡 Think about obedience and love...",
+      mastered: false
     },
     {
       ref: "Luke 9:23",
       text: "And He said to all, 'if anyone would come after me, let him deny himself and take up his cross daily and follow me.'",
-      hint: "💡 This is about daily commitment and sacrifice..."
+      hint: "💡 This is about daily commitment and sacrifice...",
+      mastered: false
     },
     {
       ref: "Philippians 2:13",
       text: "For it is God who works in you, both to will and to work for his good pleasure.",
-      hint: "💡 Focus on God's work in us..."
+      hint: "💡 Focus on God's work in us...",
+      mastered: false
     },
     {
       ref: "John 14:26",
       text: "But the Helper, the Holy Spirit, whom the Father will send in my name, he will teach you all things and bring to your remembrance all that I have said to you.",
-      hint: "💡 The Holy Spirit as teacher and helper..."
+      hint: "💡 The Holy Spirit as teacher and helper...",
+      mastered: false
     },
     {
       ref: "Matthew 22:37-39",
       text: "And he said to him, 'You shall love the Lord your God with all your heart and with all your soul and with all your mind.' This is the great and first commandment. And a second is like it: 'You shall love your neighbor as yourself.'",
-      hint: "💡 The two greatest commandments..."
+      hint: "💡 The two greatest commandments...",
+      mastered: false
     },
     {
       ref: "Romans 12:2",
       text: "Do not be conformed to this world, but be transformed by the renewal of your mind, that by testing you may discern what is the will of God, what is good and acceptable and perfect.",
-      hint: "💡 Transformation through renewal of mind..."
+      hint: "💡 Transformation through renewal of mind...",
+      mastered: false
     },
     {
       ref: "Romans 3:23-24",
       text: "For all have sinned and fall short of the glory of God, and are justified by his grace as a gift, through the redemption that is in Christ Jesus.",
-      hint: "💡 Grace and redemption through Christ..."
+      hint: "💡 Grace and redemption through Christ...",
+      mastered: false
     },
     {
       ref: "2 Corinthians 5:17",
       text: "Therefore, if anyone is in Christ, he is a new creation. The old has passed away; behold, the new has come.",
-      hint: "💡 Becoming a new creation in Christ..."
+      hint: "💡 Becoming a new creation in Christ...",
+      mastered: false
     },
     {
       ref: "Acts 3:19",
       text: "Repent therefore, and turn back, that your sins may be blotted out, that times of refreshing may come from the presence of the Lord.",
-      hint: "💡 Repentance leads to refreshing..."
+      hint: "💡 Repentance leads to refreshing...",
+      mastered: false
     }
   ];
 
   let currentVerseIndex = 0;
   let verseRevealed = false;
   let todayKey = getTodayKey();
+  let randomMode = false;
+  let timerInterval = null;
+  let timerStart = 0;
+  let versesOrder = [];
+  let currentUsername = null;
+
+  // Add mastered property to verses
+  verses.forEach(v => v.mastered = false);
+
+  function getUserKey(key) {
+    return currentUsername ? `${currentUsername}_${key}` : key;
+  }
+
+  function selectUser(username) {
+    currentUsername = username;
+    localStorage.setItem("lastUsername", username);
+    document.getElementById("loginScreen").classList.add("hidden");
+    document.getElementById("currentUser").innerText = username;
+    initializeVerse();
+    updateStats();
+  }
+
+  function logout() {
+    if (confirm("Switch user? Your progress is saved.")) {
+      currentUsername = null;
+      localStorage.removeItem("lastUsername");
+      document.getElementById("loginScreen").classList.remove("hidden");
+    }
+  }
+
+  function checkLogin() {
+    const lastUser = localStorage.getItem("lastUsername");
+    if (lastUser) {
+      currentUsername = lastUser;
+      document.getElementById("loginScreen").classList.add("hidden");
+      document.getElementById("currentUser").innerText = lastUser;
+      return true;
+    }
+    return false;
+  }
 
   function getTodayKey() {
     const today = new Date();
     return `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
   }
 
-  function initializeVerse() {
-    const lastKey = localStorage.getItem("lastVerseDateKey");
-    
-    // Daily rotation: show new verse each day
-    if (lastKey !== todayKey) {
-      const randomIndex = Math.floor(Math.random() * verses.length);
-      localStorage.setItem("currentVerseIndex", randomIndex);
-      localStorage.setItem("lastVerseDateKey", todayKey);
-      currentVerseIndex = randomIndex;
-    } else {
-      // Load today's verse
-      currentVerseIndex = parseInt(localStorage.getItem("currentVerseIndex")) || 0;
+  function playSound() {
+    try {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      oscillator.frequency.value = 800;
+      oscillator.type = 'sine';
+      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.2);
+    } catch (e) {}
+  }
+
+  function saveStreak() {
+    const lastPracticeDate = localStorage.getItem(getUserKey("lastPracticeDate"));
+    const today = getTodayKey();
+    if (lastPracticeDate !== today) {
+      let streak = parseInt(localStorage.getItem(getUserKey("streak"))) || 0;
+      const dayDiff = lastPracticeDate ? Math.floor((new Date(today.split('-')) - new Date(lastPracticeDate.split('-'))) / (1000 * 60 * 60 * 24)) : 2;
+      if (dayDiff === 1) streak++;
+      else if (dayDiff > 1) streak = 1;
+      else streak = streak || 1;
+      localStorage.setItem(getUserKey("streak"), streak);
+      localStorage.setItem(getUserKey("lastPracticeDate"), today);
     }
-    
+  }
+
+  function getStreak() {
+    const lastPracticeDate = localStorage.getItem(getUserKey("lastPracticeDate"));
+    const today = getTodayKey();
+    if (lastPracticeDate === today) return parseInt(localStorage.getItem(getUserKey("streak"))) || 0;
+    return 0;
+  }
+
+  function updateStats() {
+    const mastered = verses.filter(v => v.mastered).length;
+    const toPractice = verses.length - mastered;
+    const streak = getStreak();
+    document.getElementById("streakBox").innerHTML = `🔥 ${streak} day streak`;
+    document.getElementById("masteredBox").innerHTML = `✓ Mastered: ${mastered}/${verses.length}`;
+    document.getElementById("practiceBox").innerHTML = `📝 To Practice: ${toPractice}/${verses.length}`;
+  }
+
+  function toggleDarkMode() {
+    document.body.classList.toggle("dark-mode");
+    const darkBtn = document.querySelector('[onclick="toggleDarkMode()"]');
+    if (document.body.classList.contains("dark-mode")) {
+      darkBtn.innerHTML = "☀️ Light";
+      localStorage.setItem("darkMode", "true");
+    } else {
+      darkBtn.innerHTML = "🌙 Dark";
+      localStorage.setItem("darkMode", "false");
+    }
+  }
+
+  function loadDarkMode() {
+    if (localStorage.getItem("darkMode") === "true") {
+      document.body.classList.add("dark-mode");
+      const darkBtn = document.querySelector('[onclick="toggleDarkMode()"]');
+      if (darkBtn) darkBtn.innerHTML = "☀️ Light";
+    }
+  }
+
+  function toggleRandomMode() {
+    randomMode = !randomMode;
+    localStorage.setItem(getUserKey("randomMode"), randomMode);
+    document.getElementById("randomBtn").classList.toggle("active", randomMode);
+    if (randomMode) createRandomOrder();
+    else versesOrder = verses.map((_, i) => i);
+    currentVerseIndex = 0;
     displayVerse();
-    verseRevealed = false;
-    updateProgress();
+  }
+
+  function createRandomOrder() {
+    versesOrder = verses.map((_, i) => i);
+    for (let i = versesOrder.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [versesOrder[i], versesOrder[j]] = [versesOrder[j], versesOrder[i]];
+    }
+  }
+
+  function initializeVerse() {
+    saveStreak();
+    randomMode = localStorage.getItem(getUserKey("randomMode")) === "true";
+    if (randomMode) {
+      createRandomOrder();
+      document.getElementById("randomBtn").classList.add("active");
+    } else {
+      versesOrder = verses.map((_, i) => i);
+    }
+    const masteredData = localStorage.getItem(getUserKey("masteredVerses"));
+    if (masteredData) {
+      const masteredIndices = JSON.parse(masteredData);
+      masteredIndices.forEach(idx => { if (verses[idx]) verses[idx].mastered = true; });
+    }
+    const lastKey = localStorage.getItem(getUserKey("lastVerseDateKey"));
+    if (lastKey !== todayKey) {
+      localStorage.setItem(getUserKey("lastVerseDateKey"), todayKey);
+      currentVerseIndex = 0;
+    } else {
+      currentVerseIndex = parseInt(localStorage.getItem(getUserKey("currentVerseIndex"))) || 0;
+    }
+    displayVerse();
+    updateStats();
+    loadDarkMode();
   }
 
   function displayVerse() {
-    const verse = verses[currentVerseIndex];
+    const actualIndex = versesOrder[currentVerseIndex];
+    const verse = verses[actualIndex];
     document.getElementById("reference").innerText = verse.ref;
     document.getElementById("verse").innerText = verse.text;
     document.getElementById("hintText").innerText = verse.hint;
-    
-    // Reset UI
     document.getElementById("verse").classList.remove("show");
     verseRevealed = false;
     document.getElementById("verseInput").value = "";
     document.getElementById("result").classList.remove("show", "correct", "incorrect");
+    document.getElementById("timer").innerHTML = "";
+    clearInterval(timerInterval);
+    timerStart = 0;
     updateProgress();
+    localStorage.setItem(getUserKey("currentVerseIndex"), currentVerseIndex);
   }
 
   function updateProgress() {
-    const progress = `Total verses:  ${verses.length}`;
+    const progress = `Total verses: ${verses.length}`;
     document.getElementById("progress").innerText = progress;
   }
 
   function revealVerse() {
+    if (!verseRevealed) {
+      timerStart = Date.now();
+      startTimer();
+    }
     document.getElementById("verse").classList.add("show");
     verseRevealed = true;
+  }
+
+  function startTimer() {
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+      const elapsed = Math.floor((Date.now() - timerStart) / 1000);
+      document.getElementById("timer").innerHTML = `⏱️ ${elapsed}s`;
+    }, 100);
   }
 
   function hideVerse() {
     document.getElementById("verse").classList.remove("show");
     verseRevealed = false;
+    clearInterval(timerInterval);
   }
 
   function nextVerse() {
     currentVerseIndex = (currentVerseIndex + 1) % verses.length;
     displayVerse();
+    // Start timer automatically
+    timerStart = Date.now();
+    startTimer();
   }
 
   function toggleTypingMode() {
@@ -327,43 +707,42 @@
     section.classList.toggle("show");
   }
 
+  function shareVerse() {
+    const verse = verses[versesOrder[currentVerseIndex]];
+    const text = `${verse.ref}\n${verse.text}`;
+    if (navigator.share) {
+      navigator.share({ title: "Bible Verse", text: text });
+    } else {
+      navigator.clipboard.writeText(text).then(() => { alert("Verse copied to clipboard!"); });
+    }
+  }
+
   function checkTyping() {
     const userInput = document.getElementById("verseInput").value.trim();
-    const actualVerse = verses[currentVerseIndex].text;
-    
+    const actualIndex = versesOrder[currentVerseIndex];
+    const actualVerse = verses[actualIndex].text;
     const result = document.getElementById("result");
-    
     if (!userInput) {
       result.innerText = "Please type something first!";
       result.classList.add("show", "incorrect");
       return;
     }
-
-    // Normalize both texts: lowercase and remove extra punctuation for comparison
     const normalize = (text) => {
-      return text.toLowerCase()
-        .replace(/[.,;:!?'"—-]/g, '') // Remove punctuation
-        .split(/\s+/)
-        .filter(word => word.length > 0);
+      return text.toLowerCase().replace(/[.,;:!?'"—-]/g, '').split(/\s+/).filter(word => word.length > 0);
     };
-    
     const actualWords = normalize(actualVerse);
     const userWords = normalize(userInput);
-    
-    // Count matching words
     let matchCount = 0;
-    userWords.forEach(word => {
-      if (actualWords.includes(word)) {
-        matchCount++;
-      }
-    });
-    
+    userWords.forEach(word => { if (actualWords.includes(word)) matchCount++; });
     const matchPercentage = (matchCount / actualWords.length) * 100;
-    
     if (matchPercentage >= 85) {
       result.innerText = "✓ Excellent! You got it right!";
       result.classList.add("show", "correct");
       result.classList.remove("incorrect");
+      playSound();
+      verses[actualIndex].mastered = true;
+      saveMasteredVerses();
+      updateStats();
     } else if (matchPercentage >= 60) {
       result.innerText = `Close! ${Math.round(matchPercentage)}% match. Try again!`;
       result.classList.add("show", "incorrect");
@@ -375,11 +754,34 @@
     }
   }
 
-  // Initialize on page load
-  initializeVerse();
-  
-  // Info text
-  document.getElementById("info").innerText = "💡 Tip: Same verse every day. New verse each day!";
+  function saveMasteredVerses() {
+    const masteredIndices = verses.map((v, i) => v.mastered ? i : -1).filter(i => i !== -1);
+    localStorage.setItem(getUserKey("masteredVerses"), JSON.stringify(masteredIndices));
+  }
+
+  function resetStats() {
+    if (confirm("Are you sure you want to reset all progress?")) {
+      localStorage.removeItem(getUserKey("streak"));
+      localStorage.removeItem(getUserKey("lastPracticeDate"));
+      localStorage.removeItem(getUserKey("masteredVerses"));
+      verses.forEach(v => v.mastered = false);
+      updateStats();
+      alert("Progress reset!");
+    }
+  }
+
+  // Keyboard shortcuts
+  document.addEventListener("keydown", (e) => {
+    if (e.key.toUpperCase() === "R") revealVerse();
+    if (e.key.toUpperCase() === "N") nextVerse();
+    if (e.key.toUpperCase() === "T") toggleTypingMode();
+  });
+
+  // Initialize
+  if (checkLogin()) {
+    initializeVerse();
+    updateStats();
+  }
 </script>
 
 </body>
