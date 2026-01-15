@@ -17,7 +17,7 @@
       font-family: -apple-system, BlinkMacSystemFont, sans-serif;
       text-align: center;
       padding: 20px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: white;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -111,6 +111,30 @@
     .typing-section.show {
       display: block;
     }
+    .typing-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .typing-header p {
+      color: #666;
+      font-size: 14px;
+      margin: 0;
+    }
+    .close-btn {
+      background: #f0f0f0;
+      color: #333;
+      padding: 6px 12px;
+      font-size: 12px;
+      text-transform: none;
+      flex: 0 0 auto;
+      width: auto;
+      min-width: 60px;
+    }
+    .close-btn:active {
+      opacity: 0.8;
+    }
     #verseInput {
       width: 100%;
       padding: 12px;
@@ -173,7 +197,11 @@
     </div>
 
     <div class="typing-section" id="typingSection">
-      <p style="color: #666; margin-bottom: 12px; font-size: 14px;">Type the verse from memory:</p>
+      <div class="typing-header">
+        <p>Type the verse from memory:</p>
+        <button class="close-btn" onclick="toggleTypingMode()">Close</button>
+      </div>
+      <p id="hintText" style="color: #999; font-size: 12px; margin-bottom: 12px;"></p>
       <textarea id="verseInput" placeholder="Type the verse here..." rows="4"></textarea>
       <button class="btn-secondary" onclick="checkTyping()">Check Answer</button>
       <div class="result" id="result"></div>
@@ -187,39 +215,48 @@
   const verses = [
     {
       ref: "John 15:10",
-      text: "If you keep my commandments, you will abide in my love, just as I have kept my Father's commandments and abide in His love."
+      text: "If you keep my commandments, you will abide in my love, just as I have kept my Father's commandments and abide in His love.",
+      hint: "💡 Think about obedience and love..."
     },
     {
       ref: "Luke 9:23",
-      text: "And He said to all, 'if anyone would come after me, let him deny himself and take up his cross daily and follow me.'"
+      text: "And He said to all, 'if anyone would come after me, let him deny himself and take up his cross daily and follow me.'",
+      hint: "💡 This is about daily commitment and sacrifice..."
     },
     {
       ref: "Philippians 2:13",
-      text: "For it is God who works in you, both to will and to work for his good pleasure."
+      text: "For it is God who works in you, both to will and to work for his good pleasure.",
+      hint: "💡 Focus on God's work in us..."
     },
     {
       ref: "John 14:26",
-      text: "But the Helper, the Holy Spirit, whom the Father will send in my name, he will teach you all things and bring to your remembrance all that I have said to you."
+      text: "But the Helper, the Holy Spirit, whom the Father will send in my name, he will teach you all things and bring to your remembrance all that I have said to you.",
+      hint: "💡 The Holy Spirit as teacher and helper..."
     },
     {
       ref: "Matthew 22:37-39",
-      text: "And he said to him, 'You shall love the Lord your God with all your heart and with all your soul and with all your mind.' This is the great and first commandment. And a second is like it: 'You shall love your neighbor as yourself.'"
+      text: "And he said to him, 'You shall love the Lord your God with all your heart and with all your soul and with all your mind.' This is the great and first commandment. And a second is like it: 'You shall love your neighbor as yourself.'",
+      hint: "💡 The two greatest commandments..."
     },
     {
       ref: "Romans 12:2",
-      text: "Do not be conformed to this world, but be transformed by the renewal of your mind, that by testing you may discern what is the will of God, what is good and acceptable and perfect."
+      text: "Do not be conformed to this world, but be transformed by the renewal of your mind, that by testing you may discern what is the will of God, what is good and acceptable and perfect.",
+      hint: "💡 Transformation through renewal of mind..."
     },
     {
       ref: "Romans 3:23-24",
-      text: "For all have sinned and fall short of the glory of God, and are justified by his grace as a gift, through the redemption that is in Christ Jesus."
+      text: "For all have sinned and fall short of the glory of God, and are justified by his grace as a gift, through the redemption that is in Christ Jesus.",
+      hint: "💡 Grace and redemption through Christ..."
     },
     {
       ref: "2 Corinthians 5:17",
-      text: "Therefore, if anyone is in Christ, he is a new creation. The old has passed away; behold, the new has come."
+      text: "Therefore, if anyone is in Christ, he is a new creation. The old has passed away; behold, the new has come.",
+      hint: "💡 Becoming a new creation in Christ..."
     },
     {
       ref: "Acts 3:19",
-      text: "Repent therefore, and turn back, that your sins may be blotted out, that times of refreshing may come from the presence of the Lord."
+      text: "Repent therefore, and turn back, that your sins may be blotted out, that times of refreshing may come from the presence of the Lord.",
+      hint: "💡 Repentance leads to refreshing..."
     }
   ];
 
@@ -255,6 +292,7 @@
     const verse = verses[currentVerseIndex];
     document.getElementById("reference").innerText = verse.ref;
     document.getElementById("verse").innerText = verse.text;
+    document.getElementById("hintText").innerText = verse.hint;
     
     // Reset UI
     document.getElementById("verse").classList.remove("show");
@@ -265,7 +303,7 @@
   }
 
   function updateProgress() {
-    const progress = `Verse ${currentVerseIndex + 1} of ${verses.length}`;
+    const progress = `Total verses:  ${verses.length}`;
     document.getElementById("progress").innerText = progress;
   }
 
@@ -291,8 +329,7 @@
 
   function checkTyping() {
     const userInput = document.getElementById("verseInput").value.trim();
-    const actualVerse = verses[currentVerseIndex].text.toLowerCase();
-    const userVerseLower = userInput.toLowerCase();
+    const actualVerse = verses[currentVerseIndex].text;
     
     const result = document.getElementById("result");
     
@@ -302,10 +339,18 @@
       return;
     }
 
-    // Calculate similarity (simple check for most words matching)
-    const actualWords = actualVerse.split(/\s+/);
-    const userWords = userVerseLower.split(/\s+/);
+    // Normalize both texts: lowercase and remove extra punctuation for comparison
+    const normalize = (text) => {
+      return text.toLowerCase()
+        .replace(/[.,;:!?'"—-]/g, '') // Remove punctuation
+        .split(/\s+/)
+        .filter(word => word.length > 0);
+    };
     
+    const actualWords = normalize(actualVerse);
+    const userWords = normalize(userInput);
+    
+    // Count matching words
     let matchCount = 0;
     userWords.forEach(word => {
       if (actualWords.includes(word)) {
