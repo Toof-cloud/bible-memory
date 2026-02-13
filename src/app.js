@@ -78,6 +78,7 @@ class BibleMemoryApp {
     window.toggleDarkMode = () => this.toggleDarkMode();
     window.toggleRandomMode = () => this.toggleRandomMode();
     window.resetStats = () => this.resetStats();
+    window.resetTimer = () => this.resetTimer();
     window.closeNextVerseModal = () => this.closeNextVerseModal();
     window.shareVerse = () => this.shareVerse();
 
@@ -180,7 +181,7 @@ class BibleMemoryApp {
     this.ui.setRevealLabel('Reveal Verse <span class="kbd">(R)</span>');
     this.ui.clearTimer();
     this.ui.resetTypingUI();
-    this.ui.setProgress(this.verseService.verses.length);
+    this.ui.setProgress(this.verseService.getCurrentPosition(), this.verseService.verses.length);
     
     this.verseRevealed = false;
     this.timerService.reset();
@@ -396,6 +397,15 @@ class BibleMemoryApp {
       alert('Progress reset!');
     }
   }
+
+  /**
+   * Reset the recall timer
+   */
+  resetTimer() {
+    this.timerService.reset();
+    this.ui.clearTimer();
+  }
+
 
   /**
    * Update stats display
