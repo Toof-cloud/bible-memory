@@ -113,6 +113,14 @@ export class VerseService {
   }
 
   /**
+   * Get current position (1-based) in the order
+   * @returns {number}
+   */
+  getCurrentPosition() {
+    return this.currentIndex + 1;
+  }
+
+  /**
    * Advance to next verse
    * @returns {Object} - New current verse
    */

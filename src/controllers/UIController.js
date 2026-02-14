@@ -73,9 +73,9 @@ export class UIController {
    * Set progress text
    * @param {number} total - Total verse count
    */
-  setProgress(total) {
+  setProgress(current, total) {
     const el = this.getElement('progress');
-    if (el) el.innerText = `Total verses: ${total}`;
+    if (el) el.innerText = `Verse ${current} of ${total}`;
   }
 
   /**
